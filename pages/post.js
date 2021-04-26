@@ -1,7 +1,23 @@
-const Post = ({id}) => <h1>Post Page # {id}</h1>;
+import axios from "axios";
+
+const Post = ({id, comments}) => (
+  <div>
+    <h1>Comments for post #{id}</h1>
+    {comments.map((comment) => (
+      <Comment {...comment} key={comment.id} />
+    ))}
+  </div>
+);
+const Comment = ({email, body}) => (
+  <div>
+    <h5>{email}</h5>
+    <p>{body}</p>
+  </div>
+);
 
 Post.getInitialProps = async ({query}) => {
-  return query;
+  const res = await axios.get(`https://jsonplaceholder.typicode.com/posts/${query.id}/comments`);
+  return {...query, comments: res.data};
 };
 
 export default Post;
